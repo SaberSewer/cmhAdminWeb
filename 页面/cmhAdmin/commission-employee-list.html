@@ -1,0 +1,123 @@
+<html class="x-admin-sm">
+<head>
+    <script type="text/javascript" src="js/jquery.min.js"></script>
+    <link rel="stylesheet" href="lib/layui/css/layui.css">
+    <link rel="stylesheet" href="css/font.css">
+    <link rel="stylesheet" href="css/xadmin.css">
+    <script src="lib/layui/layui.js" charset="utf-8"></script>
+    <script type="text/javascript" src="js/xadmin.js"></script>
+    <script type="text/javascript" src="js/request.js"></script>
+</head>
+<body>
+<div class="layui-fluid">
+    <div class="x-nav">
+          <span class="layui-breadcrumb">
+            <a href="">首页</a>
+            <a href="">绩效</a>
+            <a>
+              <cite>员工绩效</cite></a>
+          </span>
+        <a class="layui-btn layui-btn-small" style="line-height:1.6em;margin-top:3px;float:right"
+           onclick="location.reload()" title="刷新">
+            <i class="layui-icon layui-icon-refresh" style="line-height:30px"></i>
+        </a>
+    </div>
+
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-md12">
+            <div class="layui-collapse">
+                <div class="layui-card">
+                    <div class="layui-card-header">
+                        <div class="layui-form layui-col-space5">
+                            <div class="layui-inline layui-show-xs-block">
+                                <input class="layui-input" id="time" name="time" readonly autocomplete="off" placeholder="绩效时间">
+                            </div>
+                            <div class="layui-inline layui-show-xs-block">
+                                <input class="layui-input" autocomplete="off" id="username" name="username" placeholder="员工名">
+                            </div>
+                            <div class="layui-inline layui-show-xs-block">
+                                <input class="layui-input" autocomplete="off" id="projectName" name="projectName" placeholder="项目名">
+                            </div>
+                            <div class="layui-inline layui-show-xs-block">
+                                <button class="layui-btn" onclick="search()"><i
+                                        class="layui-icon">&#xe615;</i></button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-card-body">
+                        <table class="layui-table"
+                               lay-data="{url:'lib/commission-employee.json', page:true, id:'test', method:'post', contentType: 'application/json', align:'center', totalRow:true}"
+                               lay-filter="test">
+                            <thead>
+                            <tr>
+                                <th lay-data="{type:'numbers', width:80,align:'center'}">编号</th>
+                                <th lay-data="{field:'date', align:'center'}">时间</th>
+                                <th lay-data="{field:'username',align:'center'}">员工</th>
+                                <th lay-data="{field:'projectName',sort: true,align:'center'}">项目名</th>
+                                <th lay-data="{field:'projectPrice',sort: true,align:'center'}">项目费</th>
+                                <th lay-data="{field:'percent',sort: true,align:'center'}">提成比例（%）</th>
+                                <th lay-data="{field:'commissionPrice',sort: true,align:'center',totalRow:true, totalRowText:'合计：'}">提成奖金(￥)</th>
+                            </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+</body>
+<script>
+    var table
+    layui.use(["table", "laydate"], function () {
+        table = layui.table
+        let layDate = layui.laydate
+        /*table.render({})*/
+
+        //渲染时间选择
+        layDate.render({
+            elem:"#time",
+            type:"month"
+        })
+
+        table.on('tool(test)', function (obj) {
+            var data = obj.data; //获得当前行数据
+            var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
+            var tr = obj.tr; //获得当前行 tr 的 DOM 对象（如果有的话）
+            //修改
+            if (layEvent == "modify") {
+                xadmin.open("修改", "commission-add.html", 400, 300, false)
+            } else if (layEvent == "delete") {
+                layer.confirm('真的删除行么', function (index) {
+                    obj.del(); //删除对应行（tr）的DOM结构，并更新缓存
+                    layer.close(index);
+                    //向服务端发送删除指令
+                });
+            }
+        })
+    })
+
+    function add() {
+        xadmin.open("添加", "commission-add.html", 400, 300, false)
+    }
+
+    function search() {
+        table.reload("test",{
+
+            where: {},
+            page: {
+                curr: 1
+            }
+        })
+    }
+</script>
+
+
+<script type="text/html" id="action">
+    <div class="layui-btn-container">
+        <button class="layui-btn layui-btn-xs" lay-event="modify" type="button">修改</button>
+        <input class="layui-btn layui-btn-xs layui-btn-danger" lay-event="delete" type="button" value="删除"/>
+    </div>
+</script>
+</html>
