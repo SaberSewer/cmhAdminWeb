@@ -60,6 +60,7 @@
                                 <th lay-data="{type:'numbers', width:80,align:'center'}">编号</th>
                                 <th lay-data="{field:'username',align:'center'}">员工</th>
                                 <th lay-data="{field:'projectName',sort: true,align:'center'}">项目名</th>
+                                <th lay-data="{field:'mode',sort: true,align:'center'}">方式</th>
                                 <th lay-data="{field:'percent',sort: true,align:'center'}">提成系数（%）</th>
                                 <th lay-data="{toolbar:'#action',width:200,align:'center'}">操作</th>
                             </tr>
@@ -97,7 +98,7 @@
     })
 
     function add() {
-        xadmin.open("添加", "commission-add.html", 400, 300, false)
+        xadmin.open("添加", "commission-add.html", 800, 600, false)
     }
 
     function paySuccess(){
