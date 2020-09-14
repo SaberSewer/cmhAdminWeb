@@ -1,0 +1,103 @@
+<html class="x-admin-sm">
+<head>
+    <meta charset="utf-8">
+    <script type="text/javascript" src="js/jquery.min.js"></script>
+    <link rel="stylesheet" href="lib/layui/css/layui.css">
+    <link rel="stylesheet" href="css/font.css">
+    <link rel="stylesheet" href="css/xadmin.css">
+    <link rel="stylesheet" href="css/bootstrap.css">
+    <script src="lib/layui/layui.js" charset="utf-8"></script>
+    <script type="text/javascript" src="js/xadmin.js"></script>
+    <script type="text/javascript" src="js/request.js"></script>
+    <script src="js/bootstrap.js"></script>
+</head>
+<body>
+<div class="layui-fluid">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-md12">
+            <div class="layui-collapse">
+                <div class="layui-card">
+                    <div class="layui-card-body">
+                        <from action="" class="layui-form" >
+
+                            <div class="layui-item">
+                                <label for="projectName" class="layui-form-label">类别</label>
+                                <div class="layui-input-block">
+                                    <select id="projectName" name="projectName" lay-verify="required" class="layui-select" lay-filter="commission">
+                                        <option>选择类别</option>
+                                        <option value="针灸" lay-data="针灸">针灸</option>
+                                        <!-- layui-data用于构建该tips层的数据JSON -->
+                                        <option value="艾灸" layui-data="艾灸">艾灸</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="layui-item">
+
+                                <div class="layui-input-block">
+                                    <select class="layui-select"  lay-verify="required" name="mode" id="mode" lay-filter="type">
+                                        <option>服务方式</option>
+                                        <option value="点钟" lay-data="点钟">点钟</option>
+                                        <!-- layui-data用于构建该tips层的数据JSON -->
+                                        <option value="排钟" layui-data="排钟">排钟</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="layui-item">
+                                <label for="percent" class="layui-form-label">点数</label>
+                                <div class="layui-input-block">
+                                    <input id="percent" name="percent" type="text" placeholder="提成点数" lay-verify="required|number"
+                                           class="layui-input">
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <div class="layui-input-block">
+                                    <button class="layui-btn" lay-submit lay-filter="subTemp">立即提交</button>
+                                    <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                                </div>
+                            </div>
+                        </from>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+</body>
+<script>
+    layui.use(["form", "table", "layer"], function () {
+        var form = layui.form
+        var tempLine = JSON.parse(sessionStorage.getItem("tempLine"))
+        form.on("submit(subTemp)", function (data) {
+            console.log(data.field)
+            let line = {}
+            line.projectName = data.field.projectName
+            line.mode = data.field.mode
+            line.percent = data.field.percent
+            line.id = tempLine.id
+            $.each(parent.defaultLine, function (idx, obj) {
+                if(obj.id == tempLine.id){
+                    parent.defaultLine[idx] = line
+                    return
+                }
+            })
+            parent.table.reload("employeeCommission", {
+                data: parent.defaultLine
+            })
+            xadmin.close()
+
+            //禁止直接提交表单
+            return false;
+        })
+    })
+
+</script>
+
+
+<script type="text/html" id="action">
+    <div class="layui-btn-container">
+        <button class="layui-btn layui-btn-xs" lay-event="modify" type="button">修改</button>
+        <input class="layui-btn layui-btn-xs layui-btn-danger" lay-event="delete" type="button" value="删除"/>
+    </div>
+</script>
+</html>

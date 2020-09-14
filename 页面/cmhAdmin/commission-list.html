@@ -7,6 +7,8 @@
     <script src="lib/layui/layui.js" charset="utf-8"></script>
     <script type="text/javascript" src="js/xadmin.js"></script>
     <script type="text/javascript" src="js/request.js"></script>
+    <link rel="stylesheet" href="css/bootstrap.css">
+    <script src="js/bootstrap.js"></script>
 </head>
 <body>
 <div class="layui-fluid">
@@ -52,70 +54,51 @@
                         </div>
                     </div>
                     <div class="layui-card-body">
-                        <table class="layui-table"
-                               lay-data="{url:'lib/commission.json', page:true, id:'test', method:'post', contentType: 'application/json', align:'center'}"
-                               lay-filter="test">
-                            <thead>
-                            <tr>
-                                <th lay-data="{type:'numbers', width:80,align:'center'}">编号</th>
-                                <th lay-data="{field:'username',align:'center'}">员工</th>
-                                <th lay-data="{field:'projectName',sort: true,align:'center'}">项目名</th>
-                                <th lay-data="{field:'mode',sort: true,align:'center'}">方式</th>
-                                <th lay-data="{field:'percent',sort: true,align:'center'}">提成系数（%）</th>
-                                <th lay-data="{toolbar:'#action',width:200,align:'center'}">操作</th>
-                            </tr>
-                            </thead>
-                        </table>
+                        <!-- <table class="layui-table"
+                                lay-data="{url:'lib/commission.json', page:true, id:'test', method:'post', contentType: 'application/json', align:'center'}"
+                                lay-filter="test">
+                             <thead>
+                             <tr>
+                                 <th lay-data="{type:'numbers', width:80,align:'center'}">编号</th>
+                                 <th lay-data="{field:'username',align:'center'}">员工</th>
+                                 <th lay-data="{field:'projectName',sort: true,align:'center'}">项目名</th>
+                                 <th lay-data="{field:'mode',sort: true,align:'center'}">方式</th>
+                                 <th lay-data="{field:'percent',sort: true,align:'center'}">提成系数（%）</th>
+                                 <th lay-data="{toolbar:'#action',width:200,align:'center'}">操作</th>
+                             </tr>
+                             </thead>
+                         </table>-->
+                        <div class="layui-row">
+                            <div class="layui-col-md1">
+                            </div>
+                            <div class="layui-col-md2">
+                                <ul class="layui-nav layui-nav-tree" style="text-align: center"
+                                    lay-filter="employeeList">
+
+                                    <li class="layui-nav-item"><a href="javascript:void(0);" lay-data="张三"
+                                                                  data-id="1">张三</a></li>
+                                    <li class="layui-nav-item"><a href="javascript:void(0);" lay-data="李四"
+                                                                  data-id="2">李四</a></li>
+                                </ul>
+                            </div>
+                            <div class="layui-col-md9">
+                                <div class="layui-tab" lay-allowClose="true" lay-filter="demo">
+                                    <ul id="tab-title" class="layui-tab-title">
+                                    </ul>
+                                    <div class="layui-tab-content" id="tab-content">
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-
         </div>
     </div>
 </div>
 </body>
-<script>
-    var table
-    layui.use("table", function () {
-        table = layui.table
-        /*table.render({})*/
-
-        table.on('tool(test)', function (obj) {
-            var data = obj.data; //获得当前行数据
-            var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
-            var tr = obj.tr; //获得当前行 tr 的 DOM 对象（如果有的话）
-            //修改
-            if (layEvent == "modify") {
-                xadmin.open("修改", "commission-add.html", 400, 300, false)
-            } else if (layEvent == "delete") {
-                layer.confirm('真的删除行么', function (index) {
-                    obj.del(); //删除对应行（tr）的DOM结构，并更新缓存
-                    layer.close(index);
-                    //向服务端发送删除指令
-                });
-            }
-        })
-    })
-
-    function add() {
-        xadmin.open("添加", "commission-add.html", 800, 600, false)
-    }
-
-    function paySuccess(){
-        xadmin.open("支付结果", "pay-success.html", 700, 400, false)
-    }
-
-    function search() {
-        table.reload("test",{
-
-            where: {},
-            page: {
-                curr: 1
-            }
-        })
-    }
-</script>
-
+<script src="js/commission.js"></script>
 
 <script type="text/html" id="action">
     <div class="layui-btn-container">
@@ -124,3 +107,20 @@
     </div>
 </script>
 </html>
+
+
+<script type="text/html" id="paySuccess">
+    <div class="paysuccess">
+        <div class="success">
+            <h3 style="text-align: center"><img src="images/right.png" width="48" height="48">付款成功</h3>
+            <div class="paydetail">
+                <p>订单编号：HW_1001010101</p>
+                <p>支付流水：1234567890123456789012345678901</p>
+                <p>支付方式：微信支付</p>
+                <p>支付金额：￥1006.00元</p>
+                <p>减免优惠：￥100.00元</p>
+            </div>
+        </div>
+
+    </div>
+</script>
